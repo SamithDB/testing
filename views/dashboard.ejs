@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" ag-app>
+<head>
+  <title>Dashbord</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.6/sweetalert2.all.js"></script>
+
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  
+
+  <style>
+      body {
+        width: 1px;
+        min-width: 100%;
+        *width: 100%;
+        background-color: #ECEFF1;
+      }
+      input[type=text] {
+          width: 130px;
+          box-sizing: border-box;
+          border: 2px solid #ccc;
+          border-radius: 4px;
+          font-size: 16px;
+          background-color: white;
+          background-image: url('asset/image/searching.png');
+          background-position: 10px 10px; 
+          background-repeat: no-repeat;
+          padding: 12px 20px 12px 40px;
+          -webkit-transition: width 0.4s ease-in-out;
+          transition: width 0.4s ease-in-out;
+      }
+
+      input[type=text]:focus {
+          width: 100%;
+      }
+    </style>
+
+    <script type="text/javascript">
+    function disableact(tex , y, z) {
+    document.getElementById(y+z).onchange = function() {
+    document.getElementById(tex+z).disabled = !this.checked;
+    };
+  }
+  </script>
+  <style type="text/css">
+    .filterable {
+    margin-top: 15px;
+    }
+    .filterable .panel-heading .pull-right {
+        margin-top: -20px;
+    }
+    .filterable .filters input[disabled] {
+        background-color: transparent;
+        border: none;
+        cursor: auto;
+        box-shadow: none;
+        padding: 0;
+        height: auto;
+    }
+    .filterable .filters input[disabled]::-webkit-input-placeholder {
+        color: #333;
+    }
+    .filterable .filters input[disabled]::-moz-placeholder {
+        color: #333;
+    }
+    .filterable .filters input[disabled]:-ms-input-placeholder {
+        color: #333;
+    }
+
+  </style>
+  <script type="text/javascript">
+    /*
+    Please consider that the JS part isn't production ready at all, I just code it to show the concept of merging filters and titles together !
+    */
+    $(document).ready(function(){
+        $('.filterable .btn-filter').click(function(){
+            var $panel = $(this).parents('.filterable'),
+            $filters = $panel.find('.filters input'),
+            $tbody = $panel.find('.table tbody');
+            if ($filters.prop('disabled') == true) {
+                $filters.prop('disabled', false);
+                $filters.first().focus();
+            } else {
+                $filters.val('').prop('disabled', true);
+                $tbody.find('.no-result').remove();
+                $tbody.find('tr').show();
+            }
+        });
+
+        $('.filterable .filters input').keyup(function(e){
+            /* Ignore tab key */
+            var code = e.keyCode || e.which;
+            if (code == '9') return;
+            /* Useful DOM data and selectors */
+            var $input = $(this),
+            inputContent = $input.val().toLowerCase(),
+            $panel = $input.parents('.filterable'),
+            column = $panel.find('.filters th').index($input.parents('th')),
+            $table = $panel.find('.table'),
+            $rows = $table.find('tbody tr');
+            /* Dirtiest filter function ever ;) */
+            var $filteredRows = $rows.filter(function(){
+                var value = $(this).find('td').eq(column).text().toLowerCase();
+                return value.indexOf(inputContent) === -1;
+            });
+            /* Clean previous no-result if exist */
+            $table.find('tbody .no-result').remove();
+            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+            $rows.show();
+            $filteredRows.hide();
+            /* Prepend no-result row if all rows are filtered */
+            if ($filteredRows.length === $rows.length) {
+                $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
+            }
+        });
+    });
+  </script>
+
+</head>
+<body ">
+      <div class="bs-example">
+          <%- include header.ejs %>
+      </div>
+
+      </br>
+      </br>
+
+<!--customer deteis and 1st grid--------------------> 
+
+
+    <div class="row-md-*">
+     
+<!--customer details and 1st grid end point--------------------> 
+
+   <!-- add, post details and 2nd grid--------------------> 
+        <!-- Main content -->
+    <section class="content">
+
+    <div class="row">
+        
+        <!-- /.col -->
+		<div class="col-md-2">
+		</div>
+        <div class="col-md-7">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#activity" data-toggle="tab">Groups</a></li>
+              <li><a href="#timeline1" data-toggle="tab">Level - Managers</a></li>
+              <li><a href="#timeline2" data-toggle="tab">Level - Users</a></li>
+              <li><a href="#settings" data-toggle="tab">Announcements</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="active tab-pane" id="activity">
+
+                  <hr/>
+                  <h4>Insert New Group</h4>
+                  <hr/>
+                  <form action="/addgp" method="post">
+                  <div class="form-group">
+                    <label>Group Name</label>
+                    <input type="text" class="form-control"  placeholder="Group" name="name">
+                  </div>
+                  <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control"  rows="3" name="desc"></textarea>
+                  </div>
+                  <div class="form-group">
+                  <select name="store" class="form-control">
+                      <%      
+                        if(store.length){ 
+                        for(var i = 0;i < store.length;i++) { 
+                      %>
+                      <option value="<%=store[i].idstore%>" ><%=store[i].name%></option>
+                      <%      
+                        }
+                      } 
+                      %>
+                  </select>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary mb-2">Insert</button>
+                  </div>
+                  </form>
+			           <hr/>
+				        <div>
+                  <h3>Groups</h3>
+                  <table class="table table-hover">
+                    <thead>
+                    <tr>
+                      <th></th>
+                      <th>Name</th>
+                      <th>Description</th>
+                      <th> </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% 
+                      if(department.length){ 
+                      for(var i = 0;i < department.length;i++) { 
+                    %>
+                    <tr >
+                      <% 
+                        if(store.length){ 
+                        for(var j = 0;j < store.length;j++) { 
+                          if(department[i].store_idstore == store[j].idstore){
+                        %> 
+                        <td class="success">
+                        For <%= store[j].name %>
+                        </td>
+                        <% 
+                            }
+                          }
+                        } 
+                      %>
+                      <form class="success" action="/editgp" method="post">
+                        
+                      <td class="success"> <input  type="text" name="gpname" class="form-control"  value="<%= department[i].name %>" > </td>
+                      <td class="success"> <input  type="text" name="gpdes" class="form-control"  value="<%= department[i].description %>" > </td>
+
+                      <td>
+                        <input type="hidden" name="gpid" class="form-control"  value="<%= department[i].iddepartment %>">
+                        <label><input type="checkbox" class="agree" id="<%= department[i].iddepartment + 'st' %>" onclick="disableact('<%= department[i].name  %>', '<%= department[i].iddepartment %>', 'st')"> Edit <br/></label><button type="submit" class="btn btn-warning" id="<%= department[i].name + 'st' %>" disabled>Save</button>
+                      </td>
+
+                      </form>
+
+                    </tr>
+                    <%
+                        }
+                      }
+                    %>
+                  <tbody>
+                  </table>
+                </div>
+
+               
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="timeline1">
+                <div >
+                                      
+                </div>
+                <div>
+                  
+                  <div class="row">
+                    <div class="panel panel-primary filterable">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Users</h3>
+                            <div class="pull-right">
+                                <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filter</button>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr class="filters">
+                                    <th><input type="text" class="form-control" placeholder="UserID#" disabled></th>
+                                    <th><input type="text" class="form-control" placeholder="Name" disabled></th>
+                                    <th><input type="text" class="form-control" placeholder="User Email" disabled></th>
+                                    <th>
+                                    <th>
+                                    <th>
+                                    <th>
+                                    <th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% 
+                                            
+                                if(allusrs.length){ 
+                                for(var i = 0;i < allusrs.length;i++) { 
+                                if(allusrs[i].status=="B" && allusrs[i].level=="manager"){
+
+                                %>
+
+                                <tr>
+                                    <%
+                                    if(employeelist.length){ 
+                                    for(var j = 0;j < employeelist.length;j++) {
+                                      if(allusrs[i].idlogin == employeelist[j].idemployee){
+                                    %>
+                                    <td><%=employeelist[j].idemployee%></td>
+                                    <td><%=employeelist[j].fname+" "+employeelist[j].lname%></td>
+                                    <%
+                                        }
+                                      }
+                                    }
+                                    %>
+                                    <td><%=allusrs[i].username%></td>
+                                      <form action="/revk" role="form"  method="post">
+                                      <input type="hidden" name="usrid" value=<%=allusrs[i].idlogin%> />
+                                      <input type="hidden" name="empid" value=<%=allusrs[i].idemployee%> />
+                                      <td><button  class="btn btn-success" >Revoke User</button></td>
+                                      </form>
+                                      <form action="/apprv" role="form"  method="post">
+                                        <td>
+                                        <input type="hidden" name="usrid" value=<%=allusrs[i].idlogin%> />
+                                        </td>
+                                        <td>
+                                        <select class="form-control" id="sel2" name="dep">
+                                          <% 
+                                            if(department.length){ 
+                                            for(var j = 0;j < department.length;j++) { 
+                                          %>
+                                          <option value="<%=department[j].iddepartment%>"><%=department[j].name%></option>
+                                          <% 
+                                                }
+                                              } 
+                                          %>
+                                        </select>
+                                        </td>
+                                        <td>
+                                        <select class="form-control" id="sel2" name="level">
+                                          <option value="user">User</option>
+                                          <option value="manager">Manager</option>
+                                          <option value="admin">Admin</option>
+                                        </select>
+                                        </td>
+                                        <td>
+                                        <button type="submit" value="Grant" class="btn btn-success">Change</button>
+                                        </td>
+                                      </form>
+                                </tr>
+
+                               <% 
+                                    }          
+                                  }
+                                }
+
+                                %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                </div>
+                <div>
+                           
+                </div>
+                
+              </div>
+              <!-- /.tab-pane -->
+
+              <div class="tab-pane" id="timeline2">
+                <div >
+                                      
+                </div>
+                <div>
+                  
+                  <div class="row">
+                    <div class="panel panel-primary filterable">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Users</h3>
+                            <div class="pull-right">
+                                <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filter</button>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr class="filters">
+                                    <th><input type="text" class="form-control" placeholder="UserID#" disabled></th>
+                                    <th><input type="text" class="form-control" placeholder="Name" disabled></th>
+                                    <th><input type="text" class="form-control" placeholder="User Email" disabled></th>
+                                    <th>
+                                    <th>
+                                    <th>
+                                    <th>
+                                    <th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% 
+                                            
+                                if(allusrs.length){ 
+                                for(var i = 0;i < allusrs.length;i++) { 
+                                if(allusrs[i].status=="B" && allusrs[i].level=="user"){
+
+                                %>
+
+                                <tr>
+                                    <%
+                                    if(employeelist.length){ 
+                                    for(var j = 0;j < employeelist.length;j++) {
+                                      if(allusrs[i].idlogin == employeelist[j].idemployee){
+                                    %>
+                                    <td><%=employeelist[j].idemployee%></td>
+                                    <td><%=employeelist[j].fname+" "+employeelist[j].lname%></td>
+                                    <%
+                                        }
+                                      }
+                                    }
+                                    %>
+                                    <td><%=allusrs[i].username%></td>
+                                      <form action="/revk" role="form"  method="post">
+                                      <input type="hidden" name="usrid" value=<%=allusrs[i].idlogin%> />
+                                      <input type="hidden" name="empid" value=<%=allusrs[i].idemployee%> />
+                                      <td><button  class="btn btn-success" >Revoke User</button></td>
+                                      </form>
+                                      <form action="/apprv" role="form"  method="post">
+                                        <td>
+                                        <input type="hidden" name="usrid" value=<%=allusrs[i].idlogin%> />
+                                        </td>
+                                        <td>
+                                        <select class="form-control" id="sel2" name="dep">
+                                          <% 
+                                            if(department.length){ 
+                                            for(var j = 0;j < department.length;j++) { 
+                                          %>
+                                          <option value="<%=department[j].iddepartment%>"><%=department[j].name%></option>
+                                          <% 
+                                                }
+                                              } 
+                                          %>
+                                        </select>
+                                        </td>
+                                        <td>
+                                        <select class="form-control" id="sel2" name="level">
+                                          <option value="user">User</option>
+                                          <option value="manager">Manager</option>
+                                          <option value="admin">Admin</option>
+                                        </select>
+                                        </td>
+                                        <td>
+                                        <button type="submit" value="Grant" class="btn btn-success">Change</button>
+                                        </td>
+                                      </form>
+                                </tr>
+
+                               <% 
+                                    }          
+                                  }
+                                }
+
+                                %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                </div>
+                <div>
+                           
+                </div>
+                
+              </div>
+              <!-- /.tab-pane -->
+
+              <div class="tab-pane" id="settings">
+                <h3>Set Announcements :</h3>
+					<form action="/ann" role="form"  method="post">
+                    <div class="form-group">
+                          <textarea class="form-control" rows="3" name="postann" placeholder="Type Here"></textarea>
+                    </div>
+                    <div class="form-group">
+                       <%
+                        var now = new Date(); 
+                        var datetime = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate(); 
+                        datetime += ' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds(); 
+                         %>
+                      <input name="datetime" type="hidden" value= <%=datetime %> >
+                      <input name="usr" type="hidden" value= <%=user.idemployee %> >
+                     </div>
+
+                     <div class="form-group">  
+                     <input type="hidden" name="_method" value="put" align="right"/>
+                     <button type="submit" class="btn btn-info btn pull-left ">Publish</button>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+
+           </form>
+              </div>
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+		<div class="col-md-3">
+		<!-- Profile Image -->
+          <div class="box box-primary">
+            <div class="box-body box-profile">
+				  <h3>Pending User Requests</h3>
+                <div class="pannel">
+
+                        
+                        <% 
+                        
+                          if(allusrs.length){ 
+                          for(var i = 0;i < allusrs.length;i++) { 
+                          if(allusrs[i].status=="A"){
+
+                        %>
+                          
+                          <form action="/apprv" role="form"  method="post">
+
+                                <div class="form-group">
+                                  <table class="table table-dark">
+                                    <tr>
+                                      <td>
+                                        <label><%=allusrs[i].username%></label>
+                                        <input type="hidden" name="usrid" value=<%=allusrs[i].idlogin%> />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                      <label >Set Department :</label>
+                                      <div class="form-group" >
+                                        <select class="form-control" id="sel2" name="dep">
+                                          <% 
+                                            if(department.length){ 
+                                            for(var j = 0;j < department.length;j++) { 
+                                          %>
+                                          <option value="<%=department[j].iddepartment%>"><%=department[j].name%></option>
+                                          <% 
+                                                }
+                                              } 
+                                          %>
+                                      </div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <select class="form-control" id="sel2" name="level">
+                                          <option value="user">User</option>
+                                          <option value="manager">Manager</option>
+                                          <option value="admin">Admin</option>
+                                        </select>
+                                      </td>
+                                      <td><button type="submit" value="Grant" class="btn btn-success">Grant</button></td>
+                                    </tr>
+                                  </table>
+                                </div>
+                               
+                          </form>
+                          <hr/>
+
+                        <% 
+                        }else{
+                          %>
+                       
+                        
+                          <%
+                        }
+                      }
+                        }else{ %>
+                       
+                          <lable>No Users</lable>
+                        
+                      <% 
+                    }
+                       %>
+
+                    </div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+          
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+    </section>
+    <!-- /.content -->
+
+
+  
+   
+   
+</div>
+
+<!--  url pop up menu  -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+    <!-- Modal content-->
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"></button>
+                <h4 class="modal-title">Sharing URLs</h4>
+              </div>
+              <div class="modal-body">
+               
+                    <form action="/posting" role="form"  method="post">
+
+                    <div class="form-group">
+                          <textarea class="form-control" rows="3" name="postnews" placeholder="Past text here"></textarea>
+                    </div>
+                    <div class="form-group">
+                          <input class="form-control" rows="3" name="url" placeholder="Past URL here"></input>
+                    </div>
+                    <div>
+                      <%
+                        var now = new Date(); 
+                        var datetime = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate(); 
+                        datetime += ' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds(); 
+                        %>
+                      <input name="datetime" type="hidden" value= <%=datetime %> >
+                      <input name="depid" type="hidden" value= <%=user.department_iddepartment %> >
+                      <input name="msgtype" type="hidden" value="url" >
+                    </div>
+                    <div class="row">              
+                    <div class="col-md-10 col-sm-5" align="left">  <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-send"></span> Send  </button></div>
+                    <button type="button" class="btn btn-defaultbtn pull-right" data-dismiss="modal">Close</button>
+                    </div>
+
+                    </form>
+                         
+              </div>
+                            
+                         
+             </div>
+          </div>
+                      
+        </div>
+
+
+
+
+
+
+
+</div>
+</div>
+
+
+    <script>
+      // execute/clear BS loaders for docs
+      $(function(){while(window.BS&&window.BS.loader&&window.BS.loader.length){(window.BS.loader.pop())()}})
+    </script>
+ 
+ 
+
+
+</body>
+</html>

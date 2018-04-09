@@ -1,0 +1,128 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html lang="en" >
+<head>
+	<title>View</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.6/sweetalert2.all.js"></script>
+
+
+	<script>
+	  function resizeIframe(obj) 
+    {
+		obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+	  }
+	</script>
+
+  <script src="https://npmcdn.com/js-alert/dist/jsalert.min.js"></script>
+    <style>
+      body {
+        width: 1px;
+        min-width: 100%;
+        *width: 100%;
+        background-color: #ECEFF1;
+        padding-bottom:60px;  
+        padding-top: 60px;
+      }
+
+  </style>
+  <script type="text/javascript">
+  function showFileName() {
+     var fil = document.getElementById("myFile");
+     alert(fil.value);
+     
+  }
+  </script>
+
+  </head>
+<body>
+
+<div class="bs-example">
+     <%- include dms_header.ejs %>
+</div>
+
+<div class="container">
+
+	<div class="row">
+
+    <div class="col-md-2" >
+    
+    
+    </div>
+
+		<div class="col-md-8" >
+		
+      <hr/>
+
+      <p class="text-muted text-center">
+        Hello, <strong><%= user.fname %> <%= user.lname %></strong>
+        <br/>
+        you can Upload Files here!
+      </p>
+
+      <p class="text-muted text-center">
+        Your Access Level, <strong><%
+         if(dmslevel.level == 'head'){
+         %>
+         Department Head
+         <%
+         }else if(dmslevel.level == 'editor'){
+         %>
+         Editor
+         <%
+         }else if(dmslevel.level == 'coworker'){
+         %>
+         Co-Worker
+         <%
+         }
+         %></strong>
+
+         <hr/>
+
+         <div class="text-center">
+              <button type="button" class="close" data-dismiss="modal"></button>
+              <h4 class="modal-title">Upload a File</h4>
+          </div>
+          <center>
+          <div class="modal-body">
+
+            <form ref='uploadForm' 
+                  id='uploadForm' 
+                  action='/up' 
+                  method='post' 
+                  encType="multipart/form-data">
+              <input type="file" name="sampleFile" />
+              <br/>
+              <input type='submit' value='Upload!' />
+            </form>
+
+            <form id="frmMain" name="frmMain">
+            <input type="file" id="myFile" name="myFile"/>
+            <a href="#" onclick="showFileName()">Show Name</a>
+            </form>
+                         
+          </div>
+          </center>
+
+      </p>
+
+          
+
+		
+		</div>
+
+    <div class="col-md-2" >
+    
+    
+    </div>
+		
+	</div>
+</div>
+	
+
+</body>
+
+</html>

@@ -1,0 +1,99 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html lang="en" >
+<head>
+	<title>View</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.6/sweetalert2.all.js"></script>
+
+
+	<script>
+	  function resizeIframe(obj) 
+    {
+		obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+	  }
+	</script>
+
+  <script src="https://npmcdn.com/js-alert/dist/jsalert.min.js"></script>
+    <style>
+      body {
+        width: 1px;
+        min-width: 100%;
+        *width: 100%;
+        background-color: #ECEFF1;
+        padding-bottom:60px;  
+        padding-top: 60px;
+      }
+
+    </style>
+
+
+  </head>
+<body>
+
+<div class="bs-example">
+     <%- include dms_header.ejs %>
+</div>
+
+<div class="container">
+
+	<div class="row">
+
+    <div class="col-md-2" >
+    
+    
+    </div>
+
+		<div class="col-md-8" >
+
+      <hr/>
+		
+      <img class="profile-user-img img-responsive " src=<%=user.image %> alt="User profile picture">
+
+      <h3 class="profile-username text-center"><%= user.fname %> <%= user.lname %></h3>
+
+      <p class="text-muted text-center"><%= user.designation %></p>
+
+      <hr/>
+
+      <p class="text-muted text-center">
+        Hello, <strong><%= user.fname %> <%= user.lname %></strong>
+        Welcome to Cloud Hub - Document Management Module. 
+      </p>
+
+      <p class="text-muted text-center">
+        Your Access Level, <strong><%
+         if(dmslevel.level == 'head'){
+         %>
+         Department Head
+         <%
+         }else if(dmslevel.level == 'editor'){
+         %>
+         Editor
+         <%
+         }else if(dmslevel.level == 'coworker'){
+         %>
+         Co-Worker
+         <%
+         }
+         %></strong>
+      </p>
+
+		
+		</div>
+
+    <div class="col-md-2" >
+    
+    
+    </div>
+		
+	</div>
+</div>
+	
+
+</body>
+
+</html>

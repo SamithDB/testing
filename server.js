@@ -1,0 +1,72 @@
+// server.js
+
+// set up ======================================================================
+var express  = require('express');
+var session  = require('express-session');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
+var app      = express();
+var port     = process.env.PORT || 8080;
+
+var passport = require('passport');
+var flash    = require('connect-flash');
+
+var MySQLStore = require('express-mysql-session')(session);
+ 
+var options = {
+    host: '35.186.155.24',
+    port: 3306,
+    user: 'root',
+    password: 'm8heNWI9wQRz',
+    database: 'cloudhub_base'
+};
+ 
+var sessionStore = new MySQLStore(options);
+
+// configuration ===============================================================
+// connect to database
+
+require('./config/passport')(passport); // pass passport for configuration
+
+app.use('/cssFiles', express.static(__dirname + '/assets')); // for CSS
+app.use('/pics', express.static(__dirname + '/propics')); 
+app.use('/productpics', express.static(__dirname + '/products'));
+app.use('/promos', express.static(__dirname + '/promos'));
+app.use('/public', express.static(__dirname + '/public')); 
+app.use('/.credentials', express.static(__dirname + '/.credentials')); 
+
+// set up our express application
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+app.use(bodyParser.json());
+
+app.set('view engine', 'ejs'); // set up ejs for templating
+
+// required for passport
+app.use(session({
+	secret: 'vidyapathaisalwaysrunning',
+	store: sessionStore,
+	resave: false,
+	saveUninitialized: false
+ } )); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+
+
+// routes ======================================================================
+require('./app/ch_routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./app/ch_admin.js')(app, passport); 
+require('./app/ch_feeder.js')(app, passport);
+require('./app/dms_routes.js')(app, passport);
+require('./app/dms_admin.js')(app, passport);
+
+
+// launch ======================================================================
+app.listen(port);
+console.log('The magic happens on port ' + port);
